@@ -38,7 +38,7 @@ for season in seasons:
 		else:
 			movieTitle = title.split(" Part")[0]
 			if movieTitle not in addedEpisodes:
-				episodesOutput += f"{movieTitle}\t{season}\t{easy_file_name(movieTitle)}\n"
+				episodesOutput += f"{movieTitle}\t{season}\t{easy_file_name(movieTitle)}.tsv\n"
 				addedEpisodes.append(movieTitle)
 
 with open("transcripts/initial_tsv/episodes.tsv", "w", encoding="utf-8") as outFile:
