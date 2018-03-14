@@ -4,21 +4,14 @@ import urllib.request
 
 from bs4 import BeautifulSoup
 
+from easy_file_name import easy_file_name
+
 # https://stackoverflow.com/a/31857152
 # https://stackoverflow.com/a/24226797
 def download(url):
 	request =  urllib.request.Request(url, data=None, headers={"User-Agent": "Mozilla"})
 	response = urllib.request.urlopen(request)
 	return response.read().decode("utf-8")
-
-def easy_file_name(text):
-	fileName = ""
-	for character in text:
-		if character.isalpha() or character.isdigit() or character == "_":
-			fileName += character
-		else:
-			fileName +="_"
-	return fileName
 
 listPageHtml = download("https://theinfosphere.org/Episode_Transcript_Listing")
 listPageSoup = BeautifulSoup(listPageHtml, "html5lib")

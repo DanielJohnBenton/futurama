@@ -1,8 +1,10 @@
-from os import listdir, makedirs
 from operator import itemgetter
-from scrape_transcript import scrape_transcript
+from os import listdir, makedirs
 
-seasons = (1, 2, 3, 4, 6)
+from scrape_transcript import scrape_transcript
+from easy_file_name import easy_file_name
+
+seasons = (1, 2, 3, 4, 5, 6)
 
 episodesOutput = ""
 
@@ -20,6 +22,8 @@ for season in seasons:
 	fileNamesPieces.sort(key=itemgetter(0)) # https://stackoverflow.com/a/4174955
 	fileNames = [pieces[1] for pieces in fileNamesPieces]
 	
+	addedEpisodes = []
+	
 	for fileName in fileNames:
 		filePath = f"{directory}/{fileName}"
 		print(filePath)
@@ -29,6 +33,13 @@ for season in seasons:
 		
 		title, lines = scrape_transcript(transcriptHtml, filePath)
 		
-		episodesOutput += f"{title}\t{season}\t{filePath}\n"
+		if season != 5:
+			episodesOutput += f"{title}\t{season}\t{easy_file_name(title)}\n"
+		else:
+			movieTitle = title.split(" Part")[0]
+			if movieTitle not in addedEpisodes:
+				episodesOutput += f"{movieTitle}\t{season}\t{easy_file_name(movieTitle)}\n"
+				addedEpisodes.append(movieTitle)
 
-print(episodesOutput)
+with open("transcripts/initial_tsv/episodes.tsv", "w", encoding="utf-8") as outFile:
+	outFile.write(episodesOutput)
