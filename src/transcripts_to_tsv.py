@@ -33,12 +33,19 @@ for season in seasons:
 		
 		title, lines = scrape_transcript(transcriptHtml, filePath)
 		
+		outputFileName = easy_file_name(title) +".tsv"
+		
 		if season != 5:
-			episodesOutput += f"{title}\t{season}\t{easy_file_name(title)}.tsv\n"
+			episodesOutput += f"{title}\t{season}\t{outputFileName}\n"
+			linesOutput = "SPEAKER\tLINE\n"
+			for line in lines:
+				linesOutput += line["SPEAKER"] +"\t"+ line["LINE"] +"\n"
+			with open(f"transcripts/initial_tsv/{outputFileName}", "w", encoding="utf-8") as outFile:
+				outFile.write(linesOutput.rstrip())
 		else:
 			movieTitle = title.split(" Part")[0]
 			if movieTitle not in addedEpisodes:
-				episodesOutput += f"{movieTitle}\t{season}\t{easy_file_name(movieTitle)}.tsv\n"
+				episodesOutput += f"{movieTitle}\t{season}\t{outputFileName}\n"
 				addedEpisodes.append(movieTitle)
 
 with open("transcripts/initial_tsv/episodes.tsv", "w", encoding="utf-8") as outFile:
