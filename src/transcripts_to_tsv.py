@@ -6,7 +6,7 @@ from easy_file_name import easy_file_name
 
 seasons = (1, 2, 3, 4, 5, 6)
 
-episodesOutput = ""
+episodesOutput = "EPISODE\tSEASON\tFILENAME\n"
 
 for season in seasons:
 	directory = f"downloaded_pages/season_{season}"
