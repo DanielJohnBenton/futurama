@@ -34,6 +34,8 @@ def scrape_transcript(transcriptHtml, fileName):
 	
 	transcriptHtml = transcriptHtmlRemovedSquareBrackets
 	
+	transcriptHtml = transcriptHtml.replace("] <div class=\"poem\">\r\n", "] ")
+	
 	brTags = ("<br />", "<BR />", "<br>", "<BR>")
 	for brTag in brTags:
 		transcriptHtml = transcriptHtml.replace(f"{brTag}\r\n", " ")
