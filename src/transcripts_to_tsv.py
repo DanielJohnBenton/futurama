@@ -42,4 +42,4 @@ for season in seasons:
 				addedEpisodes.append(movieTitle)
 
 with open("transcripts/initial_tsv/episodes.tsv", "w", encoding="utf-8") as outFile:
-	outFile.write(episodesOutput)
+	outFile.write(episodesOutput.rstrip())
