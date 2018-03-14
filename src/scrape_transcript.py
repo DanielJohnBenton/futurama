@@ -1,0 +1,51 @@
+from bs4 import BeautifulSoup
+
+def scrape_transcript(transcriptHtml, fileName):
+	soup = BeautifulSoup(transcriptHtml, "html5lib")
+	
+	[scriptTag.extract() for scriptTag in soup("script")]
+	
+	h1 = soup.find_all("h1")
+	if len(h1) >= 1:
+		title = h1[0].text.replace("Transcript:", "").strip()
+	
+	transcriptHtml = str(soup)
+	transcriptHtmlRemovedSquareBrackets = ""
+	
+	squareBracketLevel = 0
+	nSquareBracketsRemoved = 0
+	
+	for character in transcriptHtml:
+		if character == "[":
+			squareBracketLevel += 1
+		elif character == "]" and squareBracketLevel > 0:
+			squareBracketLevel -= 1
+			nSquareBracketsRemoved += 1
+		elif squareBracketLevel == 0:
+			transcriptHtmlRemovedSquareBrackets += character
+	
+	assert squareBracketLevel == 0, f"Square brackets problem! In file: {fileName}"
+	
+	transcriptHtml = transcriptHtmlRemovedSquareBrackets
+	
+	brTags = ("<br />", "<BR />", "<br>", "<BR>")
+	for brTag in brTags:
+		transcriptHtml = transcriptHtml.replace(f"{brTag}\r\n", " ")
+	
+	soup = BeautifulSoup(transcriptHtml, "html5lib")
+	
+	for link in soup.findAll("a"):
+		link.unwrap()
+	
+	transcriptHtml = str(soup)
+	
+	htmlLines = [line.split("</b>:") for line in transcriptHtml.splitlines() if "</b>:" in line]
+	
+	lines = []
+	for htmlLine in htmlLines:
+		lines.append({
+			"SPEAKER": htmlLine[0].split("<b>")[-1].replace("\t", " ").strip(),
+			"LINE": BeautifulSoup(htmlLine[1], "html5lib").text.replace("\t", " ").strip()
+		})
+	
+	return title, lines
