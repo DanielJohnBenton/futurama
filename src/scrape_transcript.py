@@ -11,20 +11,26 @@ def scrape_transcript(transcriptHtml, fileName):
 	
 	transcriptHtml = str(soup)
 	transcriptHtmlRemovedSquareBrackets = ""
+	#print()
+	#import sys
 	
 	squareBracketLevel = 0
-	nSquareBracketsRemoved = 0
-	
 	for character in transcriptHtml:
 		if character == "[":
+			#print()
+			#print(f"--- START {squareBracketLevel} ---")
 			squareBracketLevel += 1
 		elif character == "]" and squareBracketLevel > 0:
 			squareBracketLevel -= 1
-			nSquareBracketsRemoved += 1
+			#print()
+			#print(f"--- END {squareBracketLevel} ---") #remove
 		elif squareBracketLevel == 0:
 			transcriptHtmlRemovedSquareBrackets += character
+		
+		#if squareBracketLevel != 0: #remove
+			#sys.stdout.write(character) #remove
 	
-	assert squareBracketLevel == 0, f"Square brackets problem! In file: {fileName}"
+	assert squareBracketLevel == 0, f"Please ensure all square brackets are closed as these blocks need to be removed automatically.\nIn file: {fileName} ({squareBracketLevel})"
 	
 	transcriptHtml = transcriptHtmlRemovedSquareBrackets
 	
