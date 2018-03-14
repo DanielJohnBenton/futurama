@@ -34,7 +34,7 @@ for season in seasons:
 		title, lines = scrape_transcript(transcriptHtml, filePath)
 		
 		if season != 5:
-			episodesOutput += f"{title}\t{season}\t{easy_file_name(title).tsv\n"
+			episodesOutput += f"{title}\t{season}\t{easy_file_name(title)}.tsv\n"
 		else:
 			movieTitle = title.split(" Part")[0]
 			if movieTitle not in addedEpisodes:
