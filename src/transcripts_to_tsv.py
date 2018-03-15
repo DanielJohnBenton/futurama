@@ -23,6 +23,7 @@ for season in seasons:
 	fileNames = [pieces[1] for pieces in fileNamesPieces]
 	
 	addedEpisodes = []
+	transcriptsForSeason5 = {}
 	
 	for fileName in fileNames:
 		filePath = f"{directory}/{fileName}"
@@ -33,9 +34,8 @@ for season in seasons:
 		
 		title, lines = scrape_transcript(transcriptHtml, filePath)
 		
-		outputFileName = easy_file_name(title) +".tsv"
-		
 		if season != 5:
+			outputFileName = easy_file_name(title) +".tsv"
 			episodesOutput += f"{title}\t{season}\t{outputFileName}\n"
 			linesOutput = "SPEAKER\tLINE\n"
 			for line in lines:
@@ -43,10 +43,22 @@ for season in seasons:
 			with open(f"transcripts/initial_tsv/{outputFileName}", "w", encoding="utf-8") as outFile:
 				outFile.write(linesOutput.rstrip())
 		else:
-			movieTitle = title.split(" Part")[0]
+			titleParts = title.split(" Part ")
+			movieTitle = titleParts[0]
+			moviePart = titleParts[1]
+			outputFileName = movieTitle +".tsv"
+			
 			if movieTitle not in addedEpisodes:
 				episodesOutput += f"{movieTitle}\t{season}\t{outputFileName}\n"
 				addedEpisodes.append(movieTitle)
+				transcriptsForSeason5[movieTitle] = "SPEAKER\tLINE\n"
+			
+			for line in lines:
+				transcriptsForSeason5[movieTitle] += line["SPEAKER"] +"\t"+ line["LINE"] +"\n"
+			
+			if moviePart == "4":
+				with open(f"transcripts/initial_tsv/{outputFileName}", "w", encoding="utf-8") as outFile:
+					outFile.write(transcriptsForSeason5[movieTitle].rstrip())
 
 with open("transcripts/initial_tsv/episodes.tsv", "w", encoding="utf-8") as outFile:
 	outFile.write(episodesOutput.rstrip())
