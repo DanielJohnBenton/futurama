@@ -46,7 +46,7 @@ for season in seasons:
 			titleParts = title.split(" Part ")
 			movieTitle = titleParts[0]
 			moviePart = titleParts[1]
-			outputFileName = movieTitle +".tsv"
+			outputFileName = easy_file_name(movieTitle) +".tsv"
 			
 			if movieTitle not in addedEpisodes:
 				episodesOutput += f"{movieTitle}\t{season}\t{outputFileName}\n"
